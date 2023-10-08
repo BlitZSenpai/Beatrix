@@ -1,3 +1,6 @@
+import axios from "axios";
+import * as cheerio from "cheerio";
+
 export async function scrapeAmazonProduct(url: string) {
 	if (!url) return;
 
@@ -15,6 +18,11 @@ export async function scrapeAmazonProduct(url: string) {
 		rejectUnauthorised: false,
 	};
 	try {
+		const response = await axios.get(url, options);
+		const $ = cheerio.load(response.data);
+
+		const title = $("#productTitle").text().trim();
+		console.log({ title });
 	} catch (error: any) {
 		throw new Error(`Failed to scrape product: ${error.message}`);
 	}
