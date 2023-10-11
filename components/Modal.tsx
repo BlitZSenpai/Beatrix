@@ -1,11 +1,28 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import {
+	FormEvent,
+	FormEventHandler,
+	Fragment,
+	HtmlHTMLAttributes,
+	useState,
+} from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 
 const Modal = () => {
 	const [isOpen, setIsOpen] = useState(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [email, setEmail] = useState("");
+
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+		//function
+		setIsSubmitting(false);
+		setEmail("");
+		closeModal();
+	};
 
 	const openModal = () => setIsOpen(true);
 	const closeModal = () => setIsOpen(false);
@@ -90,6 +107,8 @@ const Modal = () => {
 										<input
 											type="email"
 											id="email"
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
 											placeholder="Enter your email address"
 											className="dialog-input"
 										/>
