@@ -9,16 +9,20 @@ import {
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { addUserEmailToProduct } from "@/lib/actions";
 
-const Modal = () => {
-	const [isOpen, setIsOpen] = useState(true);
+interface Props {
+	productId: string;
+}
+const Modal = ({ productId }: Props) => {
+	const [isOpen, setIsOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [email, setEmail] = useState("");
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsSubmitting(true);
-		//function
+		await addUserEmailToProduct(productId, email);
 		setIsSubmitting(false);
 		setEmail("");
 		closeModal();
@@ -32,12 +36,7 @@ const Modal = () => {
 				Track
 			</button>
 			<Transition appear show={isOpen} as={Fragment}>
-				<Dialog
-					as="div"
-					open={isOpen}
-					onClose={closeModal}
-					className="dialog-container"
-				>
+				<Dialog as="div" onClose={closeModal} className="dialog-container">
 					<div className="min-h-screen px-4 text-center">
 						<Transition.Child
 							as={Fragment}
@@ -90,7 +89,7 @@ const Modal = () => {
 										Never miss a bargain again with out timely alerts!
 									</p>
 								</div>
-								<form className="flex flex-col mt-5">
+								<form className="flex flex-col mt-5" onSubmit={handleSubmit}>
 									<label
 										htmlFor="email"
 										className="text-sm font-medium text-gray-700"
@@ -114,7 +113,7 @@ const Modal = () => {
 										/>
 									</div>
 									<button type="submit" className="dialog-btn">
-										Track
+										{isSubmitting ? "Submitting..." : "Track"}
 									</button>
 								</form>
 							</div>
